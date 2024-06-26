@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
-const {createHmac,randonBytes} = require('crypto')
+const crypto = require('crypto');
 
-const userSchema = new Schema({
+const userSchema = new mongoose.Schema({
     fullName:{
         type: String,
         required: true,
@@ -12,8 +12,7 @@ const userSchema = new Schema({
         unique: true,
     },
     salt:{
-        type: String,
-        required: true,
+        type: String
     },
     password:{
         type: String,
@@ -31,13 +30,13 @@ const userSchema = new Schema({
 
 });
 
-userSchema.pre('save' , function(next){
+userSchema.pre('save' , function(next){ // after perform any save operation in database
     const user = this; // current user
     if(!user.isModified('password')){// if password does not update
         return;
     }
-    const salt = randonBytes(16).toString(); // randon String 
-    const hashPassword = createHmac('sha256',salt)
+    const salt = crypto.randomBytes(16).toString(); // randon String 
+    const hashPassword = crypto.createHmac('sha256',salt)
     .update(user.password)
     .digest('hex');
 
@@ -47,5 +46,19 @@ userSchema.pre('save' , function(next){
 
 })
 
-const user = model('User',userSchema);
+userSchema.static('matchPassword' , async function(email,password){
+    const user = await this.findOne({email});
+    if(!user) throw new Error("user not found!");
+    const salt = user.salt;
+    const hassPassword = user.password;
+    const currentPasswordHash = crypto.createHmac('sha256',salt)
+    .update(password)
+    .digest('hex');
+
+    if(hassPassword!=currentPasswordHash) throw new Error("Incoorect Password!");
+
+    return {...user,password: undefined, salt: undefined};
+})
+
+const user = mongoose.model('User',userSchema);
 module.exports = user;
