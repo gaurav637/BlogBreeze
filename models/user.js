@@ -31,7 +31,7 @@ const userSchema = new Schema({
 
 });
 
-userSchema.pre('save' , function(next){
+userSchema.pre('save' , function(next){ // after perform any save operation in database
     const user = this; // current user
     if(!user.isModified('password')){// if password does not update
         return;
