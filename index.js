@@ -15,7 +15,7 @@ app.use(express.urlencoded({extended:false}));
 app.get('/' , (req,res) => {
     res.render('home')
 })
-app.use('/user',userRouter);
+app.use('/user',userRouter); // sign and sign page
 
 
 app.listen(PORT , ()=> {
