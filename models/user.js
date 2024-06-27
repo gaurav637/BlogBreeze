@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const crypto = require('crypto');
+const auth = require('/Users/sudhanshubhardwaj/Desktop/Blog-Node/BlogBreeze/services/authentication.js');
 
 const userSchema = new mongoose.Schema({
     fullName:{
@@ -20,7 +21,7 @@ const userSchema = new mongoose.Schema({
     },
     profileImage:{
         type: String,
-        default: '/Users/sudhanshubhardwaj/Desktop/Blog-App/public/images.jpeg',
+        default: '/Users/sudhanshubhardwaj/Desktop/Blog-Node/BlogBreeze/public/images.jpeg',
     },
     role:{
         type: String,
@@ -46,7 +47,7 @@ userSchema.pre('save' , function(next){ // after perform any save operation in d
 
 })
 
-userSchema.static('matchPassword' , async function(email,password){
+userSchema.static('matchPasswordAndCreateToken' , async function(email,password){
     const user = await this.findOne({email});
     if(!user) throw new Error("user not found!");
     const salt = user.salt;
@@ -56,8 +57,8 @@ userSchema.static('matchPassword' , async function(email,password){
     .digest('hex');
 
     if(hassPassword!=currentPasswordHash) throw new Error("Incoorect Password!");
-
-    return {...user,password: undefined, salt: undefined};
+    const token = auth.createTokenForUser(user);
+    return token;
 })
 
 const user = mongoose.model('User',userSchema);
