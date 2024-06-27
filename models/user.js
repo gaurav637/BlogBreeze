@@ -21,13 +21,13 @@ const userSchema = new mongoose.Schema({
     },
     profileImage:{
         type: String,
-        default: '/Users/sudhanshubhardwaj/Desktop/Blog-Node/BlogBreeze/public/images.jpeg',
+        default: '/Users/sudhanshubhardwaj/Desktop/Blog-Node/BlogBreeze/public/upload/1719474106725-$(file.originalname)',
     },
     role:{
         type: String,
         enum: ["USER","ADMIN"],
-        default: "USER",
-    }
+        default: "USER",// R05845558
+    }  // 5956000100025173
 
 });
 

@@ -9,7 +9,7 @@ const blogSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    converImageUrl:{
+    coverImageUrl:{
         type: String,
     },
     createdBy:{
