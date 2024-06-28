@@ -4,7 +4,6 @@ const path = require('path');
 require('dotenv').config();
 const {checkForAuthenticationCookie} = require('/Users/sudhanshubhardwaj/Desktop/Blog-Node/BlogBreeze/middlewares/authentication.js');
 const app = express();
-const PORT = process.env.PORT||8080;
 const cookiePaser = require('cookie-parser');
 const userRouter = require('/Users/sudhanshubhardwaj/Desktop/Blog-Node/BlogBreeze/routes/userRouter.js');
 require('/Users/sudhanshubhardwaj/Desktop/Blog-Node/BlogBreeze/db/connection.js');
@@ -31,7 +30,7 @@ app.use('/user',userRouter); // sign and sign page
 app.use('/blog' , blogRouter);
 
 
-
+const PORT = process.env.PORT||8080;
 app.listen(PORT , ()=> {
     console.log(`server on at port -> ${PORT}`);
 });
